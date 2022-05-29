@@ -12,3 +12,4 @@ public class MovieRate
     public User? User { get; set; }
     public int? Rate { get; set; }
 }
+
