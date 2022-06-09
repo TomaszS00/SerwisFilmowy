@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using SerwisFilmowy.Entities;
 
 namespace SerwisFilmowy.Database
 {
@@ -9,5 +9,11 @@ namespace SerwisFilmowy.Database
         {
 
         }
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<MovieCategory> MovieCategories { get; set; }
+        public DbSet<MovieRate> MovieRates { get; set; }
     }
+
 }
