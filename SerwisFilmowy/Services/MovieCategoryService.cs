@@ -6,7 +6,16 @@ using SerwisFilmowy.Models;
 
 namespace SerwisFilmowy.Services;
 
-public class MovieCategoryService
+public interface IMovieCategoryService
+{
+    Task<MovieCategoryDto> GetById(int id);
+    Task<IEnumerable<MovieCategoryDto>> GetAll();
+    Task Create(MovieCategoryViewModel movieCategoryViewModel);
+    Task UpdateAsync(int id, MovieCategoryViewModel movieCategoryViewModel);
+    Task RemoveAsync(int id);
+}
+
+public class MovieCategoryService : IMovieCategoryService
 {
     private readonly MovieDbContext _context;
     private readonly IMapper _mapper;

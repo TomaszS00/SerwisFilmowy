@@ -1,6 +1,8 @@
+using SerwisFilmowy.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using SerwisFilmowy.Database;
+using System.Reflection;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<MovieDbContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
+
+// AutoMapper
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+// Add services to DI 
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMovieCategoryService, MovieCategoryService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 var app = builder.Build();
 
