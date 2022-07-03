@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using SerwisFilmowy.Authorization;
 using SerwisFilmowy.Entities;
+using SerwisFilmowy.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -60,6 +61,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwagger();
 }
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
