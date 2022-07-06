@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SerwisFilmowy.Database;
 using SerwisFilmowy.Entities;
@@ -15,6 +16,7 @@ public interface IMovieService
     Task Remove(int id);
     Task Update(int id, MovieViewModel movieViewModel);
     Task Rate(int id, MovieRate rate);
+    Task Rate(int id, MovieRateViewModel rate);
 }
 
 public class MovieService : IMovieService
@@ -22,7 +24,7 @@ public class MovieService : IMovieService
     private readonly MovieDbContext _context;
     private readonly IMapper _mapper;
 
-    public MovieService(MovieDbContext context, IMapper mapper)
+    public MovieService(MovieDbContext context, IMapper mapper, IHttpContextAccessor contextAccessor)
     {
         _context = context;
         _mapper = mapper;
@@ -89,11 +91,20 @@ public class MovieService : IMovieService
         await _context.SaveChangesAsync();
     }
 
-    public async Task Rate(int id, MovieRate rate)
+    public async Task Rate(int id, MovieRateViewModel rate)
     {
         var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
         if (movie == null) throw new NotFoundException("Movie not found");
-        movie.Rates.Add(rate);
+        MovieRate movieRate = new MovieRate()
+        {
+            MovieId = id,
+            UserId = userId,
+            Rate = rate.Rate
+
+        };
+        movie.Rates.Add(movieRate);
         await _context.SaveChangesAsync();
     }
+
+    public ClaimsPrincipal User => _contextAccessor.HttpContext?.User;
 }
