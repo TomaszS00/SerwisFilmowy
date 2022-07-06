@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SerwisFilmowy.Database;
 using System.Reflection;
 using System.Text;
+using SerwisFilmowy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using SerwisFilmowy.Authorization;
@@ -54,6 +55,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMovieCategoryService, MovieCategoryService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -67,6 +70,10 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+
+PrepDB.PrepPopulation(app);
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
