@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SerwisFilmowy.Authorization;
+using SerwisFilmowy.Exceptions;
 
 namespace SerwisFilmowy.Services;
 
@@ -53,12 +54,12 @@ public class UserService : IUserService
             .FirstOrDefault(x => x.Email == dto.Login);
         if (user is null)
         {
-            // throw new BadRequestException("Invalid email or password");
+            throw new BadRequestException("Invalid email or password");
         }
         var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
         if (result == PasswordVerificationResult.Failed)
         {
-            // throw new BadRequestException("Invalid email or password");
+            throw new BadRequestException("Invalid email or password");
         }
         var claims = new List<Claim>()
         {

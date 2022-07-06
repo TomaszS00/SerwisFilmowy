@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SerwisFilmowy.Database;
 using SerwisFilmowy.Entities;
 using SerwisFilmowy.Models;
+using SerwisFilmowy.Exceptions;
 
 namespace SerwisFilmowy.Services;
 
@@ -33,7 +34,7 @@ public class MovieCategoryService : IMovieCategoryService
             .MovieCategories
             .FirstOrDefaultAsync(m => m.Id == id);
 
-        if (movieCategory is null) throw new Exception("Movie Category not found");
+        if (movieCategory is null) throw new NotFoundException("Movie Category not found");
 
         return _mapper.Map<MovieCategoryDto>(movieCategory);
     }
@@ -61,7 +62,7 @@ public class MovieCategoryService : IMovieCategoryService
     public async Task UpdateAsync(int id, MovieCategoryViewModel movieCategoryViewModel)
     {
         var dbCategory = await _context.MovieCategories.FirstOrDefaultAsync(c => c.Id == id);
-        if (dbCategory is null) throw new Exception("Movie Category not found");
+        if (dbCategory is null) throw new NotFoundException("Movie Category not found");
         dbCategory.Name = movieCategoryViewModel.Name;
         await _context.SaveChangesAsync();
     }
@@ -69,7 +70,7 @@ public class MovieCategoryService : IMovieCategoryService
     public async Task RemoveAsync(int id)
     {
         var category = await _context.MovieCategories.FirstOrDefaultAsync(c => c.Id == id);
-        if (category == null) throw new Exception("Movie Category not found");
+        if (category == null) throw new NotFoundException("Movie Category not found");
         _context.MovieCategories.Remove(category);
         await _context.SaveChangesAsync();
     }

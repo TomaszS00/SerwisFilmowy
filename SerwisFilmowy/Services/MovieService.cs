@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SerwisFilmowy.Database;
 using SerwisFilmowy.Entities;
 using SerwisFilmowy.Models;
+using SerwisFilmowy.Exceptions;
 
 namespace SerwisFilmowy.Services;
 
@@ -45,8 +46,7 @@ public class MovieService : IMovieService
     public async Task<MovieDto> GetById(int id)
     {
         var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
-        // ToDo exception
-        if (movie == null) throw new Exception("Movie not found");
+        if (movie == null) throw new NotFoundException("Movie not found");
         return _mapper.Map<MovieDto>(movie);
     }
 
@@ -69,8 +69,7 @@ public class MovieService : IMovieService
     public async Task Remove(int id)
     {
         var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
-        // ToDo exception
-        if (movie == null) throw new Exception("Movie not found");
+        if (movie == null) throw new NotFoundException("Movie not found");
         _context.Movies.Remove(movie);
         await _context.SaveChangesAsync();
     }
@@ -78,8 +77,7 @@ public class MovieService : IMovieService
     public async Task Update(int id, MovieViewModel movieViewModel)
     {
         var newMovie = await _context.Movies.FirstOrDefaultAsync(t => t.Id == id);
-        // ToDo exception
-        if (newMovie == null) throw new Exception("Movie not found");
+        if (newMovie == null) throw new NotFoundException("Movie not found");
 
         newMovie.Title = movieViewModel.Title;
         newMovie.Producer = movieViewModel.Producer;
@@ -94,8 +92,7 @@ public class MovieService : IMovieService
     public async Task Rate(int id, MovieRate rate)
     {
         var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
-        // ToDo exception
-        if (movie == null) throw new Exception("Movie not found");
+        if (movie == null) throw new NotFoundException("Movie not found");
         movie.Rates.Add(rate);
         await _context.SaveChangesAsync();
     }
