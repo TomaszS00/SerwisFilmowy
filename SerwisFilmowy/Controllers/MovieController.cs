@@ -8,7 +8,7 @@ namespace SerwisFilmowy.Controllers
     [ApiController]
     [Authorize]
     [Route("api/movies")]
-    public class MovieController : Controller
+    public class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
 
@@ -52,7 +52,7 @@ namespace SerwisFilmowy.Controllers
             return NoContent();
         }
 
-        [HttpPost("/{id}/rate")]
+        [HttpPost("{id}/rate")]
         public async Task<IActionResult> Rate([FromRoute] int id, [FromBody] MovieRateViewModel rate)
         {
             await _movieService.Rate(id, rate);

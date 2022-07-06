@@ -7,7 +7,7 @@ namespace SerwisFilmowy.Controllers;
 
 [Route("api/user")]
 [ApiController]
-public class UserController : Controller
+public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
 

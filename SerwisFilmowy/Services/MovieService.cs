@@ -102,7 +102,7 @@ public class MovieService : IMovieService
             Rate = rate.Rate
 
         };
-        movie.Rates.Add(movieRate);
+        _context.MovieRates.Add(movieRate);
         await _context.SaveChangesAsync();
     }
 

@@ -8,7 +8,7 @@ namespace SerwisFilmowy.Controllers;
 [Route("api/movies/categories")]
 [ApiController]
 [Authorize]
-public class MovieCategoryController : Controller
+public class MovieCategoryController : ControllerBase
 {
     private readonly IMovieCategoryService _movieCategoryService;
 
