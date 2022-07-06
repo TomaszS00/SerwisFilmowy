@@ -12,8 +12,8 @@ public interface IMovieCategoryService
     Task<MovieCategoryDto> GetById(int id);
     Task<IEnumerable<MovieCategoryDto>> GetAll();
     Task Create(MovieCategoryViewModel movieCategoryViewModel);
-    Task UpdateAsync(int id, MovieCategoryViewModel movieCategoryViewModel);
-    Task RemoveAsync(int id);
+    Task Update(int id, MovieCategoryViewModel movieCategoryViewModel);
+    Task Remove(int id);
 }
 
 public class MovieCategoryService : IMovieCategoryService
@@ -59,7 +59,7 @@ public class MovieCategoryService : IMovieCategoryService
         await _context.MovieCategories.AddAsync(category);
         await _context.SaveChangesAsync();
     }
-    public async Task UpdateAsync(int id, MovieCategoryViewModel movieCategoryViewModel)
+    public async Task Update(int id, MovieCategoryViewModel movieCategoryViewModel)
     {
         var dbCategory = await _context.MovieCategories.FirstOrDefaultAsync(c => c.Id == id);
         if (dbCategory is null) throw new NotFoundException("Movie Category not found");
@@ -67,7 +67,7 @@ public class MovieCategoryService : IMovieCategoryService
         await _context.SaveChangesAsync();
     }
 
-    public async Task RemoveAsync(int id)
+    public async Task Remove(int id)
     {
         var category = await _context.MovieCategories.FirstOrDefaultAsync(c => c.Id == id);
         if (category == null) throw new NotFoundException("Movie Category not found");
