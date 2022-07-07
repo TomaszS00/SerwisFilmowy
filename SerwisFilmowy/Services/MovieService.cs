@@ -23,11 +23,13 @@ public class MovieService : IMovieService
 {
     private readonly MovieDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _contextAccessor;
 
     public MovieService(MovieDbContext context, IMapper mapper, IHttpContextAccessor contextAccessor)
     {
         _context = context;
         _mapper = mapper;
+        _contextAccessor = contextAccessor;
     }
 
 
@@ -93,6 +95,7 @@ public class MovieService : IMovieService
 
     public async Task Rate(int id, MovieRateViewModel rate)
     {
+        var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
         var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
         if (movie == null) throw new NotFoundException("Movie not found");
         MovieRate movieRate = new MovieRate()
@@ -104,6 +107,11 @@ public class MovieService : IMovieService
         };
         _context.MovieRates.Add(movieRate);
         await _context.SaveChangesAsync();
+    }
+
+    public Task Rate(int id, MovieRate rate)
+    {
+        throw new NotImplementedException();
     }
 
     public ClaimsPrincipal User => _contextAccessor.HttpContext?.User;

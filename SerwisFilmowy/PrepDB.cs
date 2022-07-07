@@ -7,7 +7,7 @@ namespace SerwisFilmowy
 {
     public class PrepDB
     {
-        ublic static void PrepPopulation(IApplicationBuilder app)
+        public static void PrepPopulation(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {

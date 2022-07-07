@@ -1,20 +1,16 @@
-using SerwisFilmowy.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using SerwisFilmowy.Database;
 using System.Reflection;
 using System.Text;
-using SerwisFilmowy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SerwisFilmowy;
 using SerwisFilmowy.Authorization;
+using SerwisFilmowy.Database;
 using SerwisFilmowy.Entities;
 using SerwisFilmowy.Middleware;
-
+using SerwisFilmowy.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 
@@ -38,19 +34,16 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSettings.JwtKey)),
     };
 });
+
+
 #endregion
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddDbContext<MovieDbContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
-
-// AutoMapper
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-// Add services to DI 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMovieCategoryService, MovieCategoryService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
@@ -58,23 +51,17 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
-var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwagger();
+    app.UseSwaggerUI();
 }
-
 app.UseMiddleware<ErrorHandlingMiddleware>();
-
 app.UseHttpsRedirection();
-
 PrepDB.PrepPopulation(app);
-
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
